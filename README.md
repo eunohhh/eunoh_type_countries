@@ -53,6 +53,7 @@
  ┃ ┣ 📂Layout
  ┃ ┃ ┗ 📜DefaultLayout.tsx
  ┃ ┣ 📜CountryCard.tsx
+ ┃ ┣ 📜CountryCardSkeleton.tsx
  ┃ ┗ 📜CountryList.tsx
  ┣ 📂routes
  ┃ ┗ 📜router.tsx
@@ -98,9 +99,14 @@
 
 ### 트러블 슈팅
 
-1. API 레이어화:
+1. API 레이어 타입 지정의 어려움:
 
-    - ㄴㅁㅇㅁㄹㅁㄴㅇㄹ
+    - API 레이어 타입 지정에 어려움이 있었습니다. 특히 Axios를 사용하여 API 호출 시, 반환되는 데이터의 타입을 지정하는 것이 어려웠습니다.
+    - 제네릭과 axios 에서 제공하는 타입을 사용하여 해결하였습니다.
+
+2. 응답 본문을 부분 배열화 하여 스크롤에 따라 보여주기:
+
+    - 응답 본문을 부분 배열화 하여 보여주기 위해 사용자 스크롤 이벤트를 추가하였습니다.
 
 <br />
 
