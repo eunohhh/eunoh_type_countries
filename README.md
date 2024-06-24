@@ -1,30 +1,112 @@
-# React + TypeScript + Vite
+# 개인프로젝트 - 인증기능이 있는 가계부
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<br><br>
 
-Currently, two official plugins are available:
+## :cat2: 목차
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+|            [🐈 프로젝트 소개 🐈](#cat2-프로젝트-소개)             |
+| :---------------------------------------------------------------: |
+|            [🏠 프로젝트 구조 🏠](#house-프로젝트-구조)            |
+|           [🍡 사용 기술 스택 🍡](#dango-사용-기술-스택)           |
+| [🍵 기술적 고민과 트러블 슈팅 🍵](#tea-기술적-고민과-트러블-슈팅) |
 
-## Expanding the ESLint configuration
+<br><br>
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+<br><br>
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+# :cat2: 프로젝트 소개
+
+### [🎉Vercel 배포 사이트](https://eunoh-auth-ledger.vercel.app/)
+
+<br>
+
+### 🐈🐕 좋은 말 할 때 로그인 해라... 😻🐶
+
+|   프로젝트명    |        최애 국가 선택하기         |
+| :-------------: | :-------------------------------: |
+|      분류       |        타입스크립트 스터디        |
+|    개발 환경    |             React 18              |
+| 사용 라이브러리 | react-router-dom, tailwind, axios |
+|    개발 기간    |      2024.06.24 ~ 2024.06.28      |
+
+<br>
+
+[🌙 목차로 돌아가기](#cat2-목차)
+
+<br>
+
+---
+
+<br>
+
+## :house: 프로젝트 구조
+
+```
+📦src
+ ┣ 📂api
+ ┃ ┗ 📜api.ts
+ ┣ 📂assets
+ ┃ ┗ 📜react.svg
+ ┣ 📂components
+ ┃ ┣ 📂Layout
+ ┃ ┃ ┗ 📜DefaultLayout.tsx
+ ┃ ┣ 📜CountryCard.tsx
+ ┃ ┗ 📜CountryList.tsx
+ ┣ 📂routes
+ ┃ ┗ 📜router.tsx
+ ┣ 📂types
+ ┃ ┣ 📜country.types.ts
+ ┃ ┣ 📜functions.types.ts
+ ┃ ┗ 📜test.json
+ ┣ 📜App.tsx
+ ┣ 📜index.css
+ ┣ 📜main.tsx
+ ┗ 📜vite-env.d.ts
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+<br>
+
+[🌙 목차로 돌아가기](#cat2-목차)
+
+<br>
+
+---
+
+<br>
+
+# :dango: 사용 기술 스택
+
+![vite](https://img.shields.io/badge/vite-5.2.12-646CFF?style=for-the-badge&logo=vite&logoColor=white) \
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) \
+![react](https://img.shields.io/badge/react-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white) \
+![react-router-dom](https://img.shields.io/badge/react--router--dom-6.23.1-CA4245?style=for-the-badge&logo=react-router&logoColor=white) \
+![React](https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+
+<br>
+
+[🌙 목차로 돌아가기](#cat2-목차)
+
+<br>
+
+---
+
+<br>
+
+# :tea: 기술적 고민과 트러블 슈팅
+
+### 트러블 슈팅
+
+1. API 레이어화:
+
+    - axios API를 클래스로 레이어화하여 Tanstack Query와 Zustand를 사용하기 편리하게 하였습니다.
+    - 이를 통해 상태 관리와 데이터 fetching 로직을 분리하고, React 컴포넌트에서 쉽게 사용할 수 있도록 했습니다.
+
+<br>
+
+[🌙 목차로 돌아가기](#cat2-목차)
+
+<br>
+
+---
