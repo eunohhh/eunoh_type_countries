@@ -1,6 +1,6 @@
 # 개인과제 - 타입스크립트1
 
-<br><br>
+<br />
 
 ## :cat2: 목차
 
@@ -10,17 +10,17 @@
 |           [🍡 사용 기술 스택 🍡](#dango-사용-기술-스택)           |
 | [🍵 기술적 고민과 트러블 슈팅 🍵](#tea-기술적-고민과-트러블-슈팅) |
 
-<br><br>
+<br />
 
 ---
 
-<br><br>
+<br />
 
 # :cat2: 프로젝트 소개
 
-### [🎉Vercel 배포 사이트](https://eunoh-auth-ledger.vercel.app/)
+### [🎉Vercel 배포 사이트](https://eunoh-type-countries.vercel.app/)
 
-<br>
+<br />
 
 ### 🐈🐕 국가를 선택해보세요~! 😻🐶
 
@@ -31,15 +31,15 @@
 | 사용 라이브러리 | react-router-dom, tailwind, axios |
 |    개발 기간    |      2024.06.24 ~ 2024.06.28      |
 
-<br>
+<br />
 
 [🌙 목차로 돌아가기](#cat2-목차)
 
-<br>
+<br />
 
 ---
 
-<br>
+<br />
 
 ## :house: 프로젝트 구조
 
@@ -66,15 +66,15 @@
  ┗ 📜vite-env.d.ts
 ```
 
-<br>
+<br />
 
 [🌙 목차로 돌아가기](#cat2-목차)
 
-<br>
+<br />
 
 ---
 
-<br>
+<br />
 
 # :dango: 사용 기술 스택
 
@@ -84,15 +84,15 @@
 ![react-router-dom](https://img.shields.io/badge/react--router--dom-6.23.1-CA4245?style=for-the-badge&logo=react-router&logoColor=white) \
 ![React](https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
-<br>
+<br />
 
 [🌙 목차로 돌아가기](#cat2-목차)
 
-<br>
+<br />
 
 ---
 
-<br>
+<br />
 
 # :tea: 기술적 고민과 트러블 슈팅
 
@@ -102,10 +102,10 @@
 
     - ㄴㅁㅇㅁㄹㅁㄴㅇㄹ
 
-<br>
+<br />
 
 [🌙 목차로 돌아가기](#cat2-목차)
 
-<br>
+<br />
 
 ---
