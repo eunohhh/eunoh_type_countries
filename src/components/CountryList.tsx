@@ -1,6 +1,6 @@
 import api from "@/api/api";
 import { Country } from "@/types/country.types";
-import { FetchCountries, SelectCountry } from "@/types/functions.types";
+import { FetchCountries, LoadMoreCountries, SelectCountry } from "@/types/functions.types";
 import makeChunkArray from "@/utils/makeChunkArray";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -20,7 +20,7 @@ function CountryList() {
     // inView 가 의도치 않게 true 로 바뀌어서 무한 로딩 되는 것 방지
     const prevInViewRef = useRef(inView);
 
-    const loadMoreCountries = useCallback(() => {
+    const loadMoreCountries: LoadMoreCountries = useCallback(() => {
         const nextIndex = currentChunkIndex + 1;
         setDisplayedCountries((prev) => [...prev, ...chunkCountries[nextIndex]]);
         setCurrentChunkIndex(nextIndex);
@@ -52,7 +52,7 @@ function CountryList() {
 
     useEffect(() => {
         if (inView && !prevInViewRef.current && currentChunkIndex < chunkCountries.length - 1) {
-            console.log(currentChunkIndex, chunkCountries.length);
+            // console.log(currentChunkIndex, chunkCountries.length);
             loadMoreCountries();
         }
         // 여기서 prevInViewRef 를 업데이트 해줘야 함
