@@ -76,16 +76,14 @@ function CountryList() {
             <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {displayedCountries.length === 0
                     ? Array.from({ length: 20 }, (_, i) => <CountryCardSkeleton key={i} />)
-                    : displayedCountries.map((country) => {
-                          return (
-                              <CountryCard
-                                  key={country.cca2}
-                                  country={country}
-                                  isSelected={false}
-                                  onClick={handleSelectCountry}
-                              />
-                          );
-                      })}
+                    : displayedCountries.map((country) => (
+                          <CountryCard
+                              key={country.cca2}
+                              country={country}
+                              isSelected={false}
+                              onClick={handleSelectCountry}
+                          />
+                      ))}
             </section>
             <div ref={ref} className="h-1 w-full"></div>
         </section>
