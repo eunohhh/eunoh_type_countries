@@ -1,31 +1,63 @@
 import api from "@/api/api";
 import { Country } from "@/types/country.types";
 import { FetchCountries, SelectCountry } from "@/types/functions.types";
-import { useEffect, useState } from "react";
+import makeChunkArray from "@/utils/makeChunkArray";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import CountryCard from "./CountryCard";
 import CountryCardSkeleton from "./CountryCardSkeleton";
 
 function CountryList() {
-    const [countries, setCountries] = useState<Country[]>([]);
+    const [chunkCountries, setChunkCountries] = useState<Country[][]>([]);
+    const [displayedCountries, setDisplayedCountries] = useState<Country[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
+    const [currentChunkIndex, setCurrentChunkIndex] = useState<number>(0);
+    const chunkSize = 20;
+    const { ref, inView } = useInView({
+        threshold: 0,
+    });
+    // inView 가 잘 안될 때 사용
+    // inView 가 의도치 않게 true 로 바뀌어서 무한 로딩 되는 것 방지
+    const prevInViewRef = useRef(inView);
+
+    const loadMoreCountries = useCallback(() => {
+        const nextIndex = currentChunkIndex + 1;
+        setDisplayedCountries((prev) => [...prev, ...chunkCountries[nextIndex]]);
+        setCurrentChunkIndex(nextIndex);
+    }, [currentChunkIndex, chunkCountries]);
+
+    const handleSelectCountry: SelectCountry = (selectedCountry: Country) => {
+        setDisplayedCountries(
+            displayedCountries.filter((country) => country.cca2 !== selectedCountry.cca2)
+        );
+        setSelectedCountries([...selectedCountries, selectedCountry]);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleUnselectCountry: SelectCountry = (selectedCountry: Country) => {
+        setSelectedCountries(
+            selectedCountries.filter((country) => country.cca2 !== selectedCountry.cca2)
+        );
+    };
 
     useEffect(() => {
         const fetchCountries: FetchCountries = async () => {
-            const response = await api.getCountries();
-            setCountries(response);
+            const data = await api.getCountries();
+            const chunks = makeChunkArray(data, chunkSize);
+            setChunkCountries(chunks);
+            if (chunks.length > 0) setDisplayedCountries(chunks[0]);
         };
         fetchCountries();
     }, []);
 
-    const handleSelectCountry: SelectCountry = (country: Country) => {
-        setCountries(countries.filter((c) => c.cca2 !== country.cca2));
-        setSelectedCountries([...selectedCountries, country]);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
-    const handleUnselectCountry: SelectCountry = (country: Country) => {
-        setSelectedCountries(selectedCountries.filter((c) => c.cca2 !== country.cca2));
-    };
+    useEffect(() => {
+        if (inView && !prevInViewRef.current && currentChunkIndex < chunkCountries.length - 1) {
+            console.log(currentChunkIndex, chunkCountries.length);
+            loadMoreCountries();
+        }
+        // 여기서 prevInViewRef 를 업데이트 해줘야 함
+        prevInViewRef.current = inView;
+    }, [inView, currentChunkIndex, chunkCountries, loadMoreCountries]);
 
     return (
         <section className="container mx-auto min-h-screen">
@@ -42,19 +74,20 @@ function CountryList() {
             </section>
             <h1 className="text-3xl font-bold text-center mb-8 mt-4">Countries</h1>
             <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {countries.length === 0 ? (
-                    <CountryCardSkeleton />
-                ) : (
-                    countries.map((country) => (
-                        <CountryCard
-                            key={country.cca2}
-                            country={country}
-                            isSelected={false}
-                            onClick={handleSelectCountry}
-                        />
-                    ))
-                )}
+                {displayedCountries.length === 0
+                    ? Array.from({ length: 20 }, (_, i) => <CountryCardSkeleton key={i} />)
+                    : displayedCountries.map((country) => {
+                          return (
+                              <CountryCard
+                                  key={country.cca2}
+                                  country={country}
+                                  isSelected={false}
+                                  onClick={handleSelectCountry}
+                              />
+                          );
+                      })}
             </section>
+            <div ref={ref} className="h-1 w-full"></div>
         </section>
     );
 }

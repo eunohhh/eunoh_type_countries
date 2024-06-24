@@ -16,14 +16,8 @@ function CountryCard({ country, isSelected, onClick }: CountryCardProps) {
                 isSelected && "border-2 border-blue-500"
             )}
         >
-            <img
-                className="w-20 h-auto mx-auto mb-4"
-                src={country.flags.svg}
-                alt={country.flag}
-            />
-            <h3 className="text-xl font-semibold mb-2">
-                {country.name.common}
-            </h3>
+            <img className="w-20 h-auto mx-auto mb-4" src={country.flags.svg} alt={country.flag} />
+            <h3 className="text-xl font-semibold mb-2">{country.name.common}</h3>
             <p className="text-gray-600">{country.capital}</p>
         </div>
     );
