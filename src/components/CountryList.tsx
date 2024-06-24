@@ -18,7 +18,7 @@ function CountryList() {
     });
     // inView 가 잘 안될 때 사용
     // inView 가 의도치 않게 true 로 바뀌어서 무한 로딩 되는 것 방지
-    const prevInViewRef = useRef(inView);
+    const prevInViewRef = useRef<boolean>(inView);
 
     const loadMoreCountries: LoadMoreCountries = useCallback(() => {
         const nextIndex = currentChunkIndex + 1;
