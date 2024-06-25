@@ -3,7 +3,7 @@ import { Country } from "@/types/country.types";
 import { FetchCountries, LoadMoreCountries, SelectCountry } from "@/types/functions.types";
 import makeChunkArray from "@/utils/makeChunkArray";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useInView } from "react-intersection-observer";
+import { InViewHookResponse, useInView } from "react-intersection-observer";
 import CountryCard from "./CountryCard";
 import CountryCardSkeleton from "./CountryCardSkeleton";
 
@@ -13,7 +13,7 @@ function CountryList() {
     const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
     const [currentChunkIndex, setCurrentChunkIndex] = useState<number>(0);
     const chunkSize = 20;
-    const { ref, inView } = useInView({
+    const { ref, inView }: InViewHookResponse = useInView({
         threshold: 0,
     });
     // inView 가 잘 안될 때 사용
@@ -28,7 +28,9 @@ function CountryList() {
 
     const handleSelectCountry: SelectCountry = (selectedCountry: Country) => {
         setDisplayedCountries(
-            displayedCountries.filter((country) => country.cca2 !== selectedCountry.cca2)
+            displayedCountries.filter<Country>(
+                (country): country is Country => country.cca2 !== selectedCountry.cca2
+            )
         );
         setSelectedCountries([...selectedCountries, selectedCountry]);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,14 +38,16 @@ function CountryList() {
 
     const handleUnselectCountry: SelectCountry = (selectedCountry: Country) => {
         setSelectedCountries(
-            selectedCountries.filter((country) => country.cca2 !== selectedCountry.cca2)
+            selectedCountries.filter<Country>(
+                (country): country is Country => country.cca2 !== selectedCountry.cca2
+            )
         );
     };
 
     useEffect(() => {
         const fetchCountries: FetchCountries = async () => {
-            const data = await api.getCountries();
-            const chunks = makeChunkArray(data, chunkSize);
+            const data: Country[] = await api.getCountries();
+            const chunks = makeChunkArray<Country>(data, chunkSize);
             setChunkCountries(chunks);
             if (chunks.length > 0) setDisplayedCountries(chunks[0]);
         };

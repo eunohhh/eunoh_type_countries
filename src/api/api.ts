@@ -1,5 +1,5 @@
 import { GetCountries } from "@/types/functions.types";
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { Country } from "./../types/country.types";
 
 export interface CustomErrorResponse {
@@ -18,7 +18,11 @@ export class API {
 
     public getCountries: GetCountries = async () => {
         try {
-            const response = await this.axios.get<Country[]>("/all");
+            const response: AxiosResponse<Country[], string> = await this.axios.get<
+                Country[],
+                AxiosResponse<Country[], string>,
+                string
+            >("/all");
 
             if (!response.data) {
                 throw new Error("데이터 가져오기 실패");
