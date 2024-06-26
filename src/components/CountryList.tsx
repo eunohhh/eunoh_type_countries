@@ -32,7 +32,7 @@ function CountryList() {
                 (country): country is Country => country.cca2 !== selectedCountry.cca2
             )
         );
-        setSelectedCountries([...selectedCountries, selectedCountry]);
+        setSelectedCountries((prev) => [...prev, selectedCountry]);
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
@@ -42,6 +42,7 @@ function CountryList() {
                 (country): country is Country => country.cca2 !== selectedCountry.cca2
             )
         );
+        setDisplayedCountries((prev) => [selectedCountry, ...prev]);
     };
 
     useEffect(() => {
