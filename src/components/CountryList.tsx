@@ -55,6 +55,9 @@ function CountryList() {
         fetchCountries();
     }, []);
 
+    // inView 값이 예측 할 수 없이 바뀝니다 ㅜㅠ
+    // 화면 안에 들어왔을 때 true 가 되고 나가면 false로 바뀌어야 하는데
+    // 반복적으로 true 가 되어서 loadMoreCountries 가 계속 호출되는 것 같습니다
     useEffect(() => {
         if (inView && !prevInViewRef.current && currentChunkIndex < chunkCountries.length - 1) {
             // console.log(currentChunkIndex, chunkCountries.length);
@@ -96,3 +99,11 @@ function CountryList() {
 }
 
 export default CountryList;
+
+// 아래는 테스트 용 코드
+// useEffect(() => {
+//     if (inView && currentChunkIndex < chunkCountries.length - 1) {
+//         console.log(currentChunkIndex, chunkCountries.length);
+//         loadMoreCountries();
+//     }
+// }, [inView, currentChunkIndex, chunkCountries, loadMoreCountries]);

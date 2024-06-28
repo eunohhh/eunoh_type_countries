@@ -10,7 +10,11 @@ export class API {
     private axios: AxiosInstance;
 
     constructor() {
-        const config: AxiosRequestConfig<string> = {
+        // 제네릭 자리에 넣는 타입은 post 요청 등의 경우 Data 의 타입이 되는 거라서 지금은 any가 떠도 그냥 놔둠
+        // 하단 참고
+        // export interface AxiosRequestConfig<D = any> {
+        //  data?: D;
+        const config: AxiosRequestConfig = {
             baseURL: import.meta.env.VITE_COUNTRIES_URL,
         };
         this.axios = axios.create(config);
