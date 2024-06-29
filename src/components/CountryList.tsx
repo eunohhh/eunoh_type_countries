@@ -2,7 +2,7 @@ import api from "@/api/api";
 import { Country } from "@/types/country.types";
 import { FetchCountries, SelectCountry } from "@/types/functions.types";
 import makeChunkArray from "@/utils/makeChunkArray";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { useCallback, useEffect, useRef, useState } from "react";
 import { InViewHookResponse, useInView } from "react-intersection-observer";
 import CountryCard from "./CountryCard";
@@ -20,6 +20,7 @@ function CountryList() {
     // inView 가 잘 안될 때 사용
     // inView 가 의도치 않게 true 로 바뀌어서 무한 로딩 되는 것 방지
     // const prevInViewRef = useRef<boolean>(inView);
+    const isTrueRef = useRef<boolean>(true);
 
     // 양쪽의 의존성이 서로를....... !!
     // const loadMoreCountries: LoadMoreCountries = useCallback(() => {
@@ -61,7 +62,7 @@ function CountryList() {
     // [ [20], [20], [20], [20] ...., [10] ]
     /** ================  의존성 관리!!!! 멍충이.... ================== */
     useEffect(() => {
-        if (inView && currentChunkIndex < chunkCountries.length - 1) {
+        if (inView && isTrueRef.current) {
             console.log(
                 "현재 불러온 page 넘버 =>",
                 currentChunkIndex,
