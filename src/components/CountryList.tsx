@@ -1,8 +1,9 @@
 import api from "@/api/api";
 import { Country } from "@/types/country.types";
-import { FetchCountries, LoadMoreCountries, SelectCountry } from "@/types/functions.types";
+import { FetchCountries, SelectCountry } from "@/types/functions.types";
 import makeChunkArray from "@/utils/makeChunkArray";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+// import { useCallback, useEffect, useRef, useState } from "react";
 import { InViewHookResponse, useInView } from "react-intersection-observer";
 import CountryCard from "./CountryCard";
 import CountryCardSkeleton from "./CountryCardSkeleton";
@@ -18,13 +19,14 @@ function CountryList() {
     });
     // inView 가 잘 안될 때 사용
     // inView 가 의도치 않게 true 로 바뀌어서 무한 로딩 되는 것 방지
-    const prevInViewRef = useRef<boolean>(inView);
+    // const prevInViewRef = useRef<boolean>(inView);
 
-    const loadMoreCountries: LoadMoreCountries = useCallback(() => {
-        const nextIndex = currentChunkIndex + 1;
-        setDisplayedCountries((prev) => [...prev, ...chunkCountries[nextIndex]]);
-        setCurrentChunkIndex(nextIndex);
-    }, [currentChunkIndex, chunkCountries]);
+    // 양쪽의 의존성이 서로를....... !!
+    // const loadMoreCountries: LoadMoreCountries = useCallback(() => {
+    //     const nextIndex = currentChunkIndex + 1;
+    //     setDisplayedCountries((prev) => [...prev, ...chunkCountries[nextIndex]]);
+    //     setCurrentChunkIndex(nextIndex);
+    // }, [currentChunkIndex, chunkCountries]);
 
     const handleSelectCountry: SelectCountry = (selectedCountry: Country) => {
         setDisplayedCountries(
@@ -55,17 +57,32 @@ function CountryList() {
         fetchCountries();
     }, []);
 
+    //아래는 테스트 용 코드
+    // [ [20], [20], [20], [20] ...., [10] ]
+    /** ================  의존성 관리!!!! 멍충이.... ================== */
+    useEffect(() => {
+        if (inView && currentChunkIndex < chunkCountries.length - 1) {
+            console.log(
+                "현재 불러온 page 넘버 =>",
+                currentChunkIndex,
+                "총 page 수 =>",
+                chunkCountries.length
+            );
+            const nextIndex = currentChunkIndex + 1;
+            setDisplayedCountries((prev) => [...prev, ...chunkCountries[nextIndex]]);
+            setCurrentChunkIndex(nextIndex);
+        }
+    }, [inView]);
+
     // inView 값이 예측 할 수 없이 바뀝니다 ㅜㅠ
     // 화면 안에 들어왔을 때 true 가 되고 나가면 false로 바뀌어야 하는데
     // 반복적으로 true 가 되어서 loadMoreCountries 가 계속 호출되는 것 같습니다
-    useEffect(() => {
-        if (inView && !prevInViewRef.current && currentChunkIndex < chunkCountries.length - 1) {
-            // console.log(currentChunkIndex, chunkCountries.length);
-            loadMoreCountries();
-        }
-        // 여기서 prevInViewRef 를 업데이트 해줘야 함
-        prevInViewRef.current = inView;
-    }, [inView, currentChunkIndex, chunkCountries, loadMoreCountries]);
+    // useEffect(() => {
+    //     if (inView && !prevInViewRef.current && currentChunkIndex < chunkCountries.length - 1) {
+    //         loadMoreCountries();
+    //     }
+    //     prevInViewRef.current = inView;
+    // }, [inView, currentChunkIndex, chunkCountries, loadMoreCountries]);
 
     return (
         <section className="container mx-auto min-h-screen">
@@ -93,17 +110,9 @@ function CountryList() {
                           />
                       ))}
             </section>
-            <div ref={ref} className="h-1 w-full"></div>
+            <div ref={ref} className="h-[100px] w-full"></div>
         </section>
     );
 }
 
 export default CountryList;
-
-// 아래는 테스트 용 코드
-// useEffect(() => {
-//     if (inView && currentChunkIndex < chunkCountries.length - 1) {
-//         console.log(currentChunkIndex, chunkCountries.length);
-//         loadMoreCountries();
-//     }
-// }, [inView, currentChunkIndex, chunkCountries, loadMoreCountries]);
