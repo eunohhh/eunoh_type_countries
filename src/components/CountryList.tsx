@@ -1,30 +1,25 @@
 import api from "@/api/api";
 import { Country } from "@/types/country.types";
-import { FetchCountries, LoadMoreCountries, SelectCountry } from "@/types/functions.types";
+import { FetchCountries, SelectCountry } from "@/types/functions.types";
 import makeChunkArray from "@/utils/makeChunkArray";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InViewHookResponse, useInView } from "react-intersection-observer";
 import CountryCard from "./CountryCard";
 import CountryCardSkeleton from "./CountryCardSkeleton";
 
+const CHUNK_SIZE = 20;
+
 function CountryList() {
-    const [chunkCountries, setChunkCountries] = useState<Country[][]>([]);
     const [displayedCountries, setDisplayedCountries] = useState<Country[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
-    const [currentChunkIndex, setCurrentChunkIndex] = useState<number>(0);
-    const chunkSize = 20;
     const { ref, inView }: InViewHookResponse = useInView({
         threshold: 0,
     });
-    // inView 가 잘 안될 때 사용
-    // inView 가 의도치 않게 true 로 바뀌어서 무한 로딩 되는 것 방지
-    const prevInViewRef = useRef<boolean>(inView);
-
-    const loadMoreCountries: LoadMoreCountries = useCallback(() => {
-        const nextIndex = currentChunkIndex + 1;
-        setDisplayedCountries((prev) => [...prev, ...chunkCountries[nextIndex]]);
-        setCurrentChunkIndex(nextIndex);
-    }, [currentChunkIndex, chunkCountries]);
+    // 아래 두 항목을 useState 에서 useRef로 변경
+    // 모든 나라를 담을 배열
+    const chunkCountriesRef = useRef<Country[][]>([]);
+    // 현재 보여지는 배열의 인덱스
+    const currentChunkIndexRef = useRef<number>(0);
 
     const handleSelectCountry: SelectCountry = (selectedCountry: Country) => {
         setDisplayedCountries(
@@ -48,24 +43,25 @@ function CountryList() {
     useEffect(() => {
         const fetchCountries: FetchCountries = async () => {
             const data: Country[] = await api.getCountries();
-            const chunks = makeChunkArray<Country>(data, chunkSize);
-            setChunkCountries(chunks);
+            const chunks = makeChunkArray<Country>(data, CHUNK_SIZE);
+            chunkCountriesRef.current = chunks;
             if (chunks.length > 0) setDisplayedCountries(chunks[0]);
         };
         fetchCountries();
     }, []);
 
-    // inView 값이 예측 할 수 없이 바뀝니다 ㅜㅠ
-    // 화면 안에 들어왔을 때 true 가 되고 나가면 false로 바뀌어야 하는데
-    // 반복적으로 true 가 되어서 loadMoreCountries 가 계속 호출되는 것 같습니다
+    // 의존성 배열에 inView만 적용하는 것으로 해결!
     useEffect(() => {
-        if (inView && !prevInViewRef.current && currentChunkIndex < chunkCountries.length - 1) {
-            // console.log(currentChunkIndex, chunkCountries.length);
-            loadMoreCountries();
+        if (inView && currentChunkIndexRef.current < chunkCountriesRef.current.length - 1) {
+            // 아래 콘솔 로그에서 하나씩 증가하는 것을 확인할 수 있음
+            // console.log(currentChunkIndexRef.current, chunkCountriesRef.current.length);
+            currentChunkIndexRef.current += 1;
+            setDisplayedCountries((prev) => [
+                ...prev,
+                ...chunkCountriesRef.current[currentChunkIndexRef.current],
+            ]);
         }
-        // 여기서 prevInViewRef 를 업데이트 해줘야 함
-        prevInViewRef.current = inView;
-    }, [inView, currentChunkIndex, chunkCountries, loadMoreCountries]);
+    }, [inView]);
 
     return (
         <section className="container mx-auto min-h-screen">
